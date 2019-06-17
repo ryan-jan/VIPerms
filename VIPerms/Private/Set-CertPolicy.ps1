@@ -44,5 +44,4 @@ function Set-CertPolicy {
         $Err = $_
         throw $Err
     }
-    
 }

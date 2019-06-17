@@ -9,6 +9,8 @@ function Invoke-Login {
     #>
 
     try {
+        $ProPref = $ProgressPreference
+        $ProgressPreference = "SilentlyContinue"
         if (!($Global:VIPerms.Server) -or ([String]::IsNullOrEmpty($Global:VIPerms.Server)) -or
             !($Global:VIPerms.Credential) -or ([String]::IsNullOrEmpty($Global:VIPerms.Credential))) {
             throw "Please authenticate using Connect-VIMobServer first!"
@@ -35,6 +37,7 @@ function Invoke-Login {
         } else {
             throw "Failed to login to vSphere MOB"
         }
+        $ProgressPreference = $ProPref
     } catch {
         $Err = $_
         throw $Err

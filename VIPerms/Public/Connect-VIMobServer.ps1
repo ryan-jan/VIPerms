@@ -44,12 +44,15 @@ function Connect-VIMobServer {
     )
 
     try {
+        $ProPref = $ProgressPreference
+        $ProgressPreference = "SilentlyContinue"
         if ($SkipCertificateCheck) {
             Set-CertPolicy -SkipCertificateCheck
         }
         $Global:VIPerms = @{
             Server = $Server
             Credential = $Credential
+            SkipCertificateCheck = $true
         }
         Invoke-Login -Server $Server -Credential $Credential
         [PSCustomObject] @{
@@ -60,6 +63,7 @@ function Connect-VIMobServer {
         if ($SkipCertificateCheck) {
             Set-CertPolicy -ResetToDefault
         }
+        $ProgressPreference = $ProPref
     } catch {
         $Err = $_
         throw $Err

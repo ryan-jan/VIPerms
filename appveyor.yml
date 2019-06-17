@@ -1,0 +1,6 @@
+environment:
+  PSGALLERY_KEY:
+    secure: HfI7yg//7EswY2t0zdoCHoNuCFWzKhZWQf+bnybOWi6UrQiMvLqkNJITpKvRVrZ5
+build: off
+test_script:
+  - ps: .\Utils\Build.ps1

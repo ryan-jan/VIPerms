@@ -33,7 +33,9 @@ function Get-VIGlobalPermission {
     )
     
     try {
-        if ($SkipCertificateCheck) {
+        $ProPref = $ProgressPreference
+        $ProgressPreference = "SilentlyContinue"
+        if ($SkipCertificateCheck -or $Global:VIPerms.SkipCertificateCheck) {
             Set-CertPolicy -SkipCertificateCheck
         }
         $VIRoles = Get-VIMobRole
@@ -78,9 +80,10 @@ function Get-VIGlobalPermission {
             }
         }
         Invoke-Logoff
-        if ($SkipCertificateCheck) {
+        if ($SkipCertificateCheck -or $Global:VIPerms.SkipCertificateCheck) {
             Set-CertPolicy -ResetToDefault
         }
+        $ProgressPreference = $ProPref
     } catch {
         $Err = $_
         throw $Err

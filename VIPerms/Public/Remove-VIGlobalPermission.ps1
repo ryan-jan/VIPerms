@@ -44,7 +44,9 @@ function Remove-VIGlobalPermission {
     )
 
     try {
-        if ($SkipCertificateCheck) {
+        $ProPref = $ProgressPreference
+        $ProgressPreference = "SilentlyContinue"
+        if ($SkipCertificateCheck -or $Global:VIPerms.SkipCertificateCheck) {
             Set-CertPolicy -SkipCertificateCheck
         }
         Invoke-Login
@@ -65,9 +67,10 @@ function Remove-VIGlobalPermission {
         }
         $Res = Invoke-WebRequest @Params
         Invoke-Logoff
-        if ($SkipCertificateCheck) {
+        if ($SkipCertificateCheck -or $Global:VIPerms.SkipCertificateCheck) {
             Set-CertPolicy -ResetToDefault
         }
+        $ProgressPreference = $ProPref
     } catch {
         $Err = $_
         throw $Err
