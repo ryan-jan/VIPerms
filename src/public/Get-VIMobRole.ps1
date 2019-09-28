@@ -1,20 +1,5 @@
 function Get-VIMobRole {
-    <#
-    .SYNOPSIS
-    Get roles via the Managed Object Browser (MOB)
-    
-    .DESCRIPTION
-    Retrieve all available roles from the vCenter MOB. This is not the most effective way of retrieving this
-    information. If you are using PowerCLI you should use the built in Get-VIRole CmdLet instead.
-    
-    .PARAMETER SkipCertificateCheck
-    Skip certificate verification.
-    
-    .EXAMPLE
-    Get-VIMobRole
-    #>
-
-
+    [CmdLetBinding()]
     param(
         [Parameter(
             Position = 0,
@@ -24,6 +9,8 @@ function Get-VIMobRole {
     )
     
     try {
+        Write-Warning ("Get-VIMobRole is deprecated and will be removed in a later release." +
+                       "Please use the VMware.PowerCLI CmdLet Get-VIRole instead.")
         $ProPref = $ProgressPreference
         $ProgressPreference = "SilentlyContinue"
         if ($SkipCertificateCheck -or $Global:VIPerms.SkipCertificateCheck) {

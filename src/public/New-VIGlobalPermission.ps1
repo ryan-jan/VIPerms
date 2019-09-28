@@ -1,37 +1,5 @@
 function New-VIGlobalPermission {
-    <#
-    .SYNOPSIS
-    Add a global permission for a user/group.
-    
-    .DESCRIPTION
-    Creates a global permission assigning either a user or group to a specific role.
-    
-    .PARAMETER Name
-    Specify the name of user or group including the domain.
-    
-    .PARAMETER IsGroup
-    Specify whether the target is a group object or not.
-    
-    .PARAMETER RoleId
-    Specify the identifier for the specific role to assign to the global permission.
-    
-    .PARAMETER Propagate
-    Specify whether the permission should propagate to all children objects or not.
-    
-    .PARAMETER SkipCertificateCheck
-    Skip certificate verification.
-    
-    .EXAMPLE
-    New-VIGlobalPermission -Name "VSPHERE.LOCAL\joe-bloggs" -RoleId -1
-
-    .EXAMPLE
-    New-VIGlobalPermission -Name "VSPHERE.LOCAL\group-of-users" -IsGroup -RoleId -1
-
-    .EXAMPLE
-    New-VIGlobalPermission -Name "VSPHERE.LOCAL\joe-bloggs" -RoleId -1 -Propagate:$false
-    #>
-
-
+    [CmdLetBinding()]
     param (
         [Parameter(
             Position = 0,

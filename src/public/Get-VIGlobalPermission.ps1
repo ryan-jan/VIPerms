@@ -1,29 +1,5 @@
 function Get-VIGlobalPermission {
-    <#
-    .SYNOPSIS
-    Get one or more global permissions.
-    
-    .DESCRIPTION
-    Return information relating to one or more global permissions. This is not very performant as it literally
-    parses the html from the response of the vSphere MOB to get the information. This appears to be the
-    only way to achieve this currently as there is no public API available for vSphere global permissions. 
-    
-    .PARAMETER SkipCertificateCheck
-    Skip certificate verification.
-    
-    .EXAMPLE
-    Get-VIGlobalPermission
-
-    Principal                                                            PrincipalType Role            Propagate
-    ---------                                                            ------------- ----            ---------
-    VSPHERE.LOCAL\vpxd-extension-b2df90b0-1e03-11e6-b844-005056bf2aaa    User          Admin           true
-    VSPHERE.LOCAL\vpxd-b2df90b0-1e03-11e6-b844-005056bf2aaa              User          Admin           true
-    VSPHERE.LOCAL\vsphere-webclient-b2df90b0-1e03-11e6-b844-005056bf2aaa User          Admin           true
-    VSPHERE.LOCAL\Administrators                                         Group         Admin           true
-    VSPHERE.LOCAL\Administrator                                          User          Admin           true
-    #>
-
-
+    [CmdLetBinding()]
     param(
         [Parameter(
             Position = 0,
@@ -38,7 +14,7 @@ function Get-VIGlobalPermission {
         if ($SkipCertificateCheck -or $Global:VIPerms.SkipCertificateCheck) {
             Set-CertPolicy -SkipCertificateCheck
         }
-        $VIRoles = Get-VIMobRole
+        $VIRoles = Get-VIRole
         Invoke-Login
         $Uri = ("https://$($Global:VIPerms.Server)/invsvc/mob3/?moid=authorizationService&" +
                 "method=AuthorizationService.GetGlobalAccessControlList")
@@ -64,18 +40,14 @@ function Get-VIGlobalPermission {
                     "tr")[3].getElementsByTagName("td")[2].getElementsByTagName("table")[0]
                 $Principal = $PrinTable.getElementsByTagName("tr")[4].getElementsByTagName("td")[2].innerText
                 $IsGroup = $PrinTable.getElementsByTagName("tr")[3].getElementsByTagName("td")[2].innerText
-                $PrincipalType = switch ($IsGroup) {
-                    $true {"Group"}
-                    $false {"User"}
-                }
                 $Role = $Item.getElementsByTagName("tr")[10].getElementsByTagName("li")[0].innerText
                 $Propagate = $Item.getElementsByTagName("tr")[9].getElementsByTagName("td")[2].innerText
 
                 [PSCustomObject] @{
-                    Principal = $Principal
-                    PrincipalType = $PrincipalType
                     Role = $RoleLookup.$($Role)
-                    Propagate = $Propagate
+                    Principal = $Principal
+                    Propagate = [Boolean] $Propagate
+                    IsGroup = [Boolean] $IsGroup
                 }
             }
         }

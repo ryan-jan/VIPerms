@@ -1,28 +1,5 @@
 function Connect-VIMobServer {
-    <#
-    .SYNOPSIS
-    Connect to the vSphere Managed Object Browser (MOB).
-    
-    .DESCRIPTION
-    This function will first test the connection to the specified vCenter server MOB. If successful
-    the Uri and PSCredentials object are stored in the global variable $Global:VIPerms for use
-    with other functions in this module. 
-    
-    .PARAMETER Server
-    Specify the name of a vCenter server.
-    
-    .PARAMETER Credential
-    Specify the credentials to use to authenticate against the MOB.
-    This is usually administrator@vsphere.local
-    
-    .PARAMETER SkipCertificateCheck
-    Skip certificate verification.
-    
-    .EXAMPLE
-    Connect-VIMobServer -Server "vcenter.example.com"
-    #>
-
-
+    [CmdLetBinding()]
     param (
         [Parameter(
             Position = 0,
@@ -46,18 +23,19 @@ function Connect-VIMobServer {
     try {
         $ProPref = $ProgressPreference
         $ProgressPreference = "SilentlyContinue"
-        if ($SkipCertificateCheck) {
-            Set-CertPolicy -SkipCertificateCheck
-        }
         $Global:VIPerms = @{
             Server = $Server
             Credential = $Credential
-            SkipCertificateCheck = $true
+            SkipCertificateCheck = $false
         }
-        Invoke-Login -Server $Server -Credential $Credential
+        if ($SkipCertificateCheck) {
+            Set-CertPolicy -SkipCertificateCheck
+            $Global:VIPerms.SkipCertificateCheck = $true
+        }
+        Invoke-Login -Server $global:VIPerms.Server -Credential $global:VIPerms.Credential
         [PSCustomObject] @{
-            Server = $Server
-            User = $Credential.GetNetworkCredential().UserName
+            Server = $global:VIPerms.Server
+            User = $global:VIPerms.Credential.GetNetworkCredential().UserName
         }
         Invoke-Logoff
         if ($SkipCertificateCheck) {

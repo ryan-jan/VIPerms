@@ -1,28 +1,5 @@
 function Remove-VIGlobalPermission {
-    <#
-    .SYNOPSIS
-    Delete a global permission for a specific user/group.
-    
-    .DESCRIPTION
-    Delete a global permission for a specific user/group.
-    
-    .PARAMETER Name
-    Specify the name of user or group including the domain.
-    
-    .PARAMETER IsGroup
-    Specify whether the target is a group object or not.
-    
-    .PARAMETER SkipCertificateCheck
-    Skip certificate verification.
-    
-    .EXAMPLE
-    Remove-VIGlobalPermission -Name "VSPHERE.LOCAL\Administrator"
-
-    .EXAMPLE
-    Remove-VIGlobalPermission -Name "VSPHERE.LOCAL\group-of-users" -IsGroup
-    #>
-
-
+    [CmdLetBinding()]
     param (
         [Parameter(
             Position = 0,
