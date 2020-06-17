@@ -12,5 +12,5 @@ if ($CurModuleVersion -gt $PrevModuleVersion) {
     New-Item -ItemType "Directory" -Path ".\out"
     Copy-Item -Path ".\src\" -Destination ".\out\VIPerms\" -Recurse
     New-ExternalHelp -Path ".\docs\" -OutputPath ".\out\VIPerms\en-US\"
-    #Publish-Module -Path ".\out\VIPerms" -NuGetApiKey $env:PSGALLERY_KEY
+    Publish-Module -Path ".\out\VIPerms" -NuGetApiKey $env:PSGALLERY_KEY
 }

@@ -1,6 +1,12 @@
+image:
+  - Visual Studio 2019
 environment:
   PSGALLERY_KEY:
     secure: HfI7yg//7EswY2t0zdoCHoNuCFWzKhZWQf+bnybOWi6UrQiMvLqkNJITpKvRVrZ5
 build: off
+install:
+  - ps: Install-Module -Name Pester -Scope CurrentUser -Force -Confirm:$false
+  - ps: Install-Module -Name platyPS -Scope CurrentUser -Force -Confirm:$false
+  - ps: Install-Module -Name PSCodeCovIO -Scope CurrentUser -Force -Confirm:$false
 test_script:
-  - ps: .\Utils\Build.ps1
+  - ps: .\Utils\Build.ps1 -Deploy

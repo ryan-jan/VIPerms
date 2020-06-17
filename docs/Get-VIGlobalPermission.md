@@ -27,8 +27,7 @@ only way to achieve this currently as there is no public API available for vSphe
 
 ### EXAMPLE 1
 ```
-Get-VIGlobalPermission
-```
+PS C:\> Get-VIGlobalPermission
 
 Principal                                                            PrincipalType Role            Propagate
 ---------                                                            ------------- ----            ---------
@@ -37,6 +36,7 @@ VSPHERE.LOCAL\vpxd-b2df90b0-1e03-11e6-b844-005056bf2aaa              User       
 VSPHERE.LOCAL\vsphere-webclient-b2df90b0-1e03-11e6-b844-005056bf2aaa User          Admin           true
 VSPHERE.LOCAL\Administrators                                         Group         Admin           true
 VSPHERE.LOCAL\Administrator                                          User          Admin           true
+```
 
 ## PARAMETERS
 
