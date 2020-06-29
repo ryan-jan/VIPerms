@@ -1,12 +1,26 @@
 image:
   - Visual Studio 2019
+  - Ubuntu1804
 environment:
   PSGALLERY_KEY:
     secure: HfI7yg//7EswY2t0zdoCHoNuCFWzKhZWQf+bnybOWi6UrQiMvLqkNJITpKvRVrZ5
 build: off
+matrix:
+  fast_finish: true
 install:
-  - ps: Install-Module -Name Pester -Scope CurrentUser -Force -Confirm:$false
+  - ps: Install-Module -Name Pester -MaximumVersion 4.10.0 -Scope CurrentUser -Force -Confirm:$false
   - ps: Install-Module -Name platyPS -Scope CurrentUser -Force -Confirm:$false
   - ps: Install-Module -Name PSCodeCovIO -Scope CurrentUser -Force -Confirm:$false
-test_script:
-  - ps: .\Utils\Build.ps1 -Deploy
+for:
+  -
+    matrix:
+      only:
+        - image: Visual Studio 2019
+    test_script:
+      - ps: .\utils\Build.ps1 -ExtDocs
+  -
+    matrix:
+      only:
+        - image: Ubuntu1804
+    test_script:
+      - pwsh: ./utils/Build.ps1 -ExtDocs -Deploy

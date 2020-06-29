@@ -12,7 +12,11 @@ Currently there is no public API available on the vCenter server to manipulate
 global permissions. However, it has been unofficially documented by people like
 [William Lam](https://www.virtuallyghetto.com/2017/03/automating-vsphere-global-permissions-with-powercli.html)
 that it is possible to automate global permissions administrative tasks via web
-requests to the Managed Object Browser (MOB).
+requests to the Managed Object Browser (MOB). This module pulls together this concept into a simple and
+easy to use PowerShell module.
+
+Please note that manipulating global permissions in this way is not supported by VMware and you are using
+this module at your own risk.
 
 # EXAMPLES
 

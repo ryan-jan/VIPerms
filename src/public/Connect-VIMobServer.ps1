@@ -1,5 +1,5 @@
 function Connect-VIMobServer {
-    [CmdLetBinding()]
+    [CmdletBinding()]
     param (
         [Parameter(
             Position = 0,
@@ -11,37 +11,36 @@ function Connect-VIMobServer {
             Position = 1,
             Mandatory = $true
         )]
-        [PSCredential] $Credential,
+        [pscredential] $Credential,
 
         [Parameter(
             Position = 2,
             Mandatory = $false
         )]
-        [Switch] $SkipCertificateCheck
+        [switch] $SkipCertificateCheck
     )
 
     try {
-        $ProPref = $ProgressPreference
-        $ProgressPreference = "SilentlyContinue"
-        $Global:VIPerms = @{
+        $global:VIPerms = @{
             Server = $Server
             Credential = $Credential
             SkipCertificateCheck = $false
         }
         if ($SkipCertificateCheck) {
-            Set-CertPolicy -SkipCertificateCheck
-            $Global:VIPerms.SkipCertificateCheck = $true
+            #Set-CertPolicy -SkipCertificateCheck
+            $global:VIPerms.SkipCertificateCheck = $true
         }
-        Invoke-Login -Server $global:VIPerms.Server -Credential $global:VIPerms.Credential
-        [PSCustomObject] @{
-            Server = $global:VIPerms.Server
-            User = $global:VIPerms.Credential.GetNetworkCredential().UserName
+        if (Invoke-MobRequest -TestConnection) {
+            [PSCustomObject] @{
+                Server = $global:VIPerms.Server
+                User = $global:VIPerms.Credential.GetNetworkCredential().UserName
+            }
+        } else {
+            Write-Warning "Authentication failed."
         }
-        Invoke-Logoff
-        if ($SkipCertificateCheck) {
-            Set-CertPolicy -ResetToDefault
-        }
-        $ProgressPreference = $ProPref
+        #if ($SkipCertificateCheck) {
+        #    Set-CertPolicy -ResetToDefault
+        #}
     } catch {
         $Err = $_
         throw $Err

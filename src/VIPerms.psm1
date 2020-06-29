@@ -10,3 +10,17 @@ foreach ($Module in @($Private + $Public)) {
 }
 
 Export-ModuleMember -Function $Public.BaseName
+
+# Add HtmlAgilityPack type depending on PSVersion
+try {
+    if (-not ([System.Management.Automation.PSTypeName]'HtmlAgilityPack.HtmlDocument').Type) {
+        if ($PSVersionTable.PSEdition -eq "Desktop") {
+            Add-Type -Path "$PSScriptRoot\Types\Net45\HtmlAgilityPack.dll"
+        } else {
+            Add-Type -Path "$PSScriptRoot\Types\netstandard2.0\HtmlAgilityPack.dll"
+        }
+    }
+} catch {
+    $Err = $_
+    throw $Err
+}

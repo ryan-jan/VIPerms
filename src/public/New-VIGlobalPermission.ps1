@@ -5,7 +5,7 @@ function New-VIGlobalPermission {
             Position = 0,
             Mandatory = $true
         )]
-        [String] $Name,
+        [String] $Principal,
 
         [Parameter(
             Position = 1,
@@ -15,32 +15,18 @@ function New-VIGlobalPermission {
 
         [Parameter(
             Position = 2,
-            Mandatory = $false
+            Mandatory = $true
         )]
-        [String] $RoleId,
+        [String] $Role,
 
         [Parameter(
             Position = 3,
             Mandatory = $false
         )]
-        [Switch] $Propagate = [Switch]::Present,
-
-        [Parameter(
-            Position = 4,
-            Mandatory = $false
-        )]
-        [Switch] $SkipCertificateCheck
+        [Switch] $Propagate
     )
     
     try {
-        $ProPref = $ProgressPreference
-        $ProgressPreference = "SilentlyContinue"
-        if ($SkipCertificateCheck -or $Global:VIPerms.SkipCertificateCheck) {
-            Set-CertPolicy -SkipCertificateCheck
-        }
-        Invoke-Login
-        $Uri = ("https://$($Global:VIPerms.Server)/invsvc/mob3/?moid=authorizationService&" +
-                "method=AuthorizationService.AddGlobalAccessControlList")
         $Group = switch ($IsGroup) {
             $true {"true"}
             $false {"false"}
@@ -49,24 +35,27 @@ function New-VIGlobalPermission {
             $true {"true"}
             $false {"false"}
         }
-        $Body = ("vmware-session-nonce=$($Global:VIPerms.SessionNonce)&" +
-                 "permissions=%3Cpermissions%3E%0D%0A+++%3Cprincipal%3E%0D%0A++++++" +
-                 "%3Cname%3E$([Uri]::EscapeUriString($Name))%3C%2Fname%3E" +
-                 "%0D%0A++++++%3Cgroup%3E$Group%3C%2Fgroup%3E%0D%0A+++%3C%2Fprincipal%3E%0D%0A+++" +
-                 "%3Croles%3E$RoleId%3C%2Froles%3E%0D%0A+++" +
-                 "%3Cpropagate%3E$Prop%3C%2Fpropagate%3E%0D%0A%3C%2Fpermissions%3E")
+
+        $Body = @{
+            "permissions" = @"
+<permissions>
+  <principal>
+    <name>$Principal</name>
+    <group>$Group</group>
+  </principal>
+  <roles>$Role</roles>
+  <propagate>$Prop</propagate>
+  <version>42</version>
+</permissions>
+"@
+        }
+        
         $Params = @{
-            Uri = $Uri
-            WebSession = $Global:VIPerms.WebSession
+            Uri = "AuthorizationService.AddGlobalAccessControlList"
             Method = "POST"
             Body = $Body
         }
-        $Res = Invoke-WebRequest @Params
-        Invoke-Logoff
-        if ($SkipCertificateCheck -or $Global:VIPerms.SkipCertificateCheck) {
-            Set-CertPolicy -ResetToDefault
-        }
-        $ProgressPreference = $ProPref
+        Invoke-MobRequest @Params
     } catch {
         $Err = $_
         throw $Err
