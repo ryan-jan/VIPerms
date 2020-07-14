@@ -1,10 +1,11 @@
-$ErrorActionPreference = "Stop"
 param (
     [switch] $Test,
     [switch] $CodeCov,
     [switch] $ExtDocs,
     [switch] $Deploy
 )
+
+$ErrorActionPreference = "Stop"
 
 Write-Host "Running on PowerShell $($PSVersionTable.PSEdition) $($PSVersionTable.PSVersion.ToString())"
 $SrcPath = Join-Path -Path (Split-Path -Path $PSScriptRoot -Parent) -ChildPath "src"
