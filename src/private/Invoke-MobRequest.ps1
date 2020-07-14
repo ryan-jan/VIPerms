@@ -1,6 +1,7 @@
 function Invoke-MobRequest {
     [CmdletBinding()]
     param (
+        [string] $Server,
         [string] $Uri,
         [string] $Method,
         [hashtable] $Body,
@@ -11,12 +12,14 @@ function Invoke-MobRequest {
         $ProPref = $ProgressPreference
         $ProgressPreference = "SilentlyContinue"
 
-        if ([string]::IsNullOrEmpty($global:VIPerms.Server)) {
+        $Conn = $global:VIPerms.Where({$_.Server -eq $Server})[0]
+
+        if ($null -eq $Conn) {
             throw "Please authenticate using Connect-VIMobServer first!"
         }
-        $BaseUri = "https://$($global:VIPerms.Server)/invsvc/mob3/?moid=authorizationService&method="
+        $BaseUri = "https://$($Conn.Server):$($Conn.Port)/invsvc/mob3/?moid=authorizationService&method="
 
-        if (($global:VIPerms.SkipCertificateCheck) -and ($PSVersionTable.PSEdition -eq "Desktop")) {
+        if (($Conn.SkipCertificateCheck) -and ($PSVersionTable.PSEdition -eq "Desktop")) {
             Set-CertPolicy -SkipCertificateCheck
         }
 
@@ -24,13 +27,13 @@ function Invoke-MobRequest {
         $LogonParams = @{
             Uri = "$($BaseUri)AuthorizationService.GetRoles"
             SessionVariable = "MobSession"
-            Credential = $Global:VIPerms.Credential
+            Credential = $Conn.Credential
             Method = "GET"
             ContentType = "application/x-www-form-urlencoded"
             UseBasicParsing = $true
         }
         if ($PSVersionTable.PSEdition -eq "Core") {
-            $LogonParams.SkipCertificateCheck = $global:VIPerms.SkipCertificateCheck
+            $LogonParams.SkipCertificateCheck = $Conn.SkipCertificateCheck
         }
         $Res = Invoke-RestMethod @LogonParams
         
@@ -57,20 +60,20 @@ function Invoke-MobRequest {
                 UseBasicParsing = $true
             }
             if ($PSVersionTable.PSEdition -eq "Core") {
-                $ReqParams.SkipCertificateCheck = $global:VIPerms.SkipCertificateCheck
+                $ReqParams.SkipCertificateCheck = $Conn.SkipCertificateCheck
             }
             Invoke-RestMethod @ReqParams
         }
 
         $LogoffParams = @{
-            Uri = "https://$($global:VIPerms.Server)/invsvc/mob3/logout"
+            Uri = "https://$($Conn.Server):$($Conn.Port)/invsvc/mob3/logout"
             WebSession = $MobSession
             Method = "GET"
             ContentType = "application/x-www-form-urlencoded"
             UseBasicParsing = $true
         }
         if ($PSVersionTable.PSEdition -eq "Core") {
-            $LogoffParams.SkipCertificateCheck = $global:VIPerms.SkipCertificateCheck
+            $LogoffParams.SkipCertificateCheck = $Conn.SkipCertificateCheck
         }
         Invoke-RestMethod @LogoffParams | Out-Null
         $ProgressPreference = $ProPref

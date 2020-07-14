@@ -13,7 +13,7 @@ Add a global permission for a user/group.
 ## SYNTAX
 
 ```
-New-VIGlobalPermission [-Name] <String> [-IsGroup] [[-RoleId] <String>] [-Propagate] [-SkipCertificateCheck]
+New-VIGlobalPermission [-Server] <String[]> [-Principal] <String> [-IsGroup] [-Role] <String> [-Propagate]
  [<CommonParameters>]
 ```
 
@@ -39,21 +39,6 @@ New-VIGlobalPermission -Name "VSPHERE.LOCAL\joe-bloggs" -RoleId -1 -Propagate:$f
 
 ## PARAMETERS
 
-### -Name
-Specify the name of user or group including the domain.
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases:
-
-Required: True
-Position: 1
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
 ### -IsGroup
 Specify whether the target is a group object or not.
 
@@ -63,22 +48,22 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 2
+Position: Named
 Default value: False
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -RoleId
-Specify the identifier for the specific role to assign to the global permission.
+### -Principal
+{{ Fill Principal Description }}
 
 ```yaml
 Type: String
 Parameter Sets: (All)
 Aliases:
 
-Required: False
-Position: 3
+Required: True
+Position: 1
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
@@ -93,23 +78,38 @@ Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 4
+Position: Named
 Default value: [Switch]::Present
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -SkipCertificateCheck
-Skip certificate verification.
+### -Role
+{{ Fill Role Description }}
 
 ```yaml
-Type: SwitchParameter
+Type: String
 Parameter Sets: (All)
 Aliases:
 
-Required: False
-Position: 5
-Default value: False
+Required: True
+Position: 2
+Default value: None
+Accept pipeline input: False
+Accept wildcard characters: False
+```
+
+### -Server
+{{ Fill Server Description }}
+
+```yaml
+Type: String[]
+Parameter Sets: (All)
+Aliases:
+
+Required: True
+Position: 0
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```

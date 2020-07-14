@@ -1,79 +1,77 @@
 ---
 external help file: VIPerms-help.xml
 Module Name: VIPerms
-online version:
+online version: https://code.vmware.com/doc/preview?id=6330#/doc/Connect-VIServer.html
 schema: 2.0.0
 ---
 
-# Connect-VIMobServer
+# Copy-VIRole
 
 ## SYNOPSIS
-Connect to the vSphere Managed Object Browser (MOB).
+{{ Fill in the Synopsis }}
 
 ## SYNTAX
 
 ```
-Connect-VIMobServer [-Server] <String> [-Credential] <PSCredential> [-SkipCertificateCheck]
+Copy-VIRole [[-SourceServer] <String>] [[-DestinationServer] <String[]>] [[-Name] <String>]
  [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-This function will first test the connection to the specified vCenter server MOB.
-If successful
-the Uri and PSCredentials object are stored in the global variable $Global:VIPerms for use
-with other functions in this module.
+{{ Fill in the Description }}
 
 ## EXAMPLES
 
-### EXAMPLE 1
+### Example 1
+```powershell
+PS C:\> {{ Add example code here }}
 ```
-Connect-VIMobServer -Server "vcenter.example.com"
-```
+
+{{ Add example description here }}
 
 ## PARAMETERS
 
-### -Server
-Specify the name of a vCenter server.
+### -DestinationServer
+{{ Fill DestinationServer Description }}
 
 ```yaml
-Type: String
+Type: String[]
 Parameter Sets: (All)
 Aliases:
 
-Required: True
+Required: False
 Position: 1
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -Credential
-Specify the credentials to use to authenticate against the MOB.
-This is usually administrator@vsphere.local
+### -Name
+{{ Fill Name Description }}
 
 ```yaml
-Type: PSCredential
+Type: String
 Parameter Sets: (All)
 Aliases:
 
-Required: True
+Required: False
 Position: 2
 Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -SkipCertificateCheck
-Skip certificate verification.
+### -SourceServer
+{{ Fill SourceServer Description }}
 
 ```yaml
-Type: SwitchParameter
+Type: String
 Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 3
-Default value: False
+Position: 0
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -83,8 +81,11 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
+### None
+
 ## OUTPUTS
 
+### System.Object
 ## NOTES
 
 ## RELATED LINKS

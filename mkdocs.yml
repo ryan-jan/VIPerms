@@ -1,0 +1,15 @@
+site_name: VIPerms Docs
+theme: readthedocs
+
+nav:
+  - Home: index.md
+  - Getting Started: getting_started.md
+  - Command Reference:
+    - Connect-VIMobServer: platyPS/Connect-VIMobServer.md
+    - Copy-VIRole: platyPS/Copy-VIRole.md
+    - Disconnect-VIMobServer: platyPS/Disconnect-VIMobServer.md
+    - Export-VIRolePrivs: platyPS/Export-VIRolePrivs.md
+    - Get-VIPerms: platyPS/Get-VIPerms.md
+    - New-VIGlobalPermission: platyPS/New-VIGlobalPermission.md
+    - Remove-VIGlobalPermission: platyPS/Remove-VIGlobalPermission.md
+    - Test-VIRolePrivs: platyPS/Test-VIRolePrivs.md

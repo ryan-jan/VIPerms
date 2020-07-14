@@ -1,7 +1,8 @@
-$Private = @(Get-ChildItem -Path "$PSScriptRoot\Private\*.ps1")
-$Public = @(Get-ChildItem -Path "$PSScriptRoot\Public\*.ps1")
+$Public = Get-ChildItem -Path (Join-Path -Path (Join-Path -Path $PSScriptRoot -ChildPath "public") -ChildPath "*.ps1")
+$Private = Get-ChildItem -Path (Join-Path -Path (Join-Path -Path $PSScriptRoot -ChildPath "private") -ChildPath "*.ps1")
+$Classes = Get-ChildItem -Path (Join-Path -Path (Join-Path -Path $PSScriptRoot -ChildPath "classes") -ChildPath "*.ps1")
 
-foreach ($Module in @($Private + $Public)) {
+foreach ($Module in @($Public + $Private + $Classes)) {
     try {
         . $Module.FullName
     } catch {
@@ -11,13 +12,18 @@ foreach ($Module in @($Private + $Public)) {
 
 Export-ModuleMember -Function $Public.BaseName
 
+Register-VIPermsArgCompleter
+
 # Add HtmlAgilityPack type depending on PSVersion
 try {
     if (-not ([System.Management.Automation.PSTypeName]'HtmlAgilityPack.HtmlDocument').Type) {
+        $Types = Join-Path -Path $PSScriptRoot -ChildPath "Types"
         if ($PSVersionTable.PSEdition -eq "Desktop") {
-            Add-Type -Path "$PSScriptRoot\Types\Net45\HtmlAgilityPack.dll"
+            $Net45 = Join-Path -Path $Types -ChildPath "Net45"
+            Add-Type -Path (Join-Path -Path $Net45 -ChildPath "HtmlAgilityPack.dll")
         } else {
-            Add-Type -Path "$PSScriptRoot\Types\netstandard2.0\HtmlAgilityPack.dll"
+            $NetStandard = Join-Path -Path $Types -ChildPath "netstandard2.0"
+            Add-Type -Path (Join-Path -Path $NetStandard -ChildPath "HtmlAgilityPack.dll")
         }
     }
 } catch {

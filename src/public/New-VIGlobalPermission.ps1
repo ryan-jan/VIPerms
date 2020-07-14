@@ -2,31 +2,35 @@ function New-VIGlobalPermission {
     [CmdLetBinding()]
     param (
         [Parameter(
-            Position = 0,
+            Mandatory = $false
+        )]
+        [string[]] $Server,
+
+        [Parameter(
             Mandatory = $true
         )]
         [String] $Principal,
 
         [Parameter(
-            Position = 1,
             Mandatory = $false
         )]
         [Switch] $IsGroup,
 
         [Parameter(
-            Position = 2,
             Mandatory = $true
         )]
         [String] $Role,
 
         [Parameter(
-            Position = 3,
             Mandatory = $false
         )]
         [Switch] $Propagate
     )
     
     try {
+        if (-not $Server) {
+            $Server = Get-DefaultVIPermsServer
+        }
         $Group = switch ($IsGroup) {
             $true {"true"}
             $false {"false"}
@@ -36,26 +40,47 @@ function New-VIGlobalPermission {
             $false {"false"}
         }
 
-        $Body = @{
-            "permissions" = @"
+        foreach ($Srv in $Server) {
+            $VIRole = Get-VIRole -Server $Srv -Name $Role -ErrorAction "Stop"
+
+            $Body = @{
+                "permissions" = @"
 <permissions>
   <principal>
     <name>$Principal</name>
     <group>$Group</group>
   </principal>
-  <roles>$Role</roles>
+  <roles>$($VIRole.Id)</roles>
   <propagate>$Prop</propagate>
   <version>42</version>
 </permissions>
 "@
-        }
+            }
         
-        $Params = @{
-            Uri = "AuthorizationService.AddGlobalAccessControlList"
-            Method = "POST"
-            Body = $Body
+            $Params = @{
+                Server = $Srv
+                Uri = "AuthorizationService.AddGlobalAccessControlList"
+                Method = "POST"
+                Body = $Body
+            }
+            $Res = Invoke-MobRequest @Params
+            $HtmlDoc = [HtmlAgilityPack.HtmlDocument]::new()
+            $HtmlDoc.LoadHtml($Res)
+            if ($HtmlDoc.DocumentNode.SelectNodes("//body/p[last()]").InnerText -like "*void*") {
+                Write-Verbose "Global permission created successfully."
+                $Perm = [VIPermsPermission]::new()
+                $Perm.Entity = "Global"
+                $Perm.EntityId = "Global"
+                $Perm.IsGroup = $IsGroup
+                $Perm.Principal = $Principal
+                $Perm.Propagate = $Propagate
+                $Perm.Role = $VIRole.Name
+                $Perm.RoleId = $VIRole.Id
+                $Perm
+            } else {
+                throw $HtmlDoc.DocumentNode.SelectNodes("//body/p[last()]").InnerText
+            }
         }
-        Invoke-MobRequest @Params
     } catch {
         $Err = $_
         throw $Err

@@ -1,79 +1,76 @@
 ---
 external help file: VIPerms-help.xml
 Module Name: VIPerms
-online version:
+online version: https://code.vmware.com/doc/preview?id=6330#/doc/Disconnect-VIServer.html
 schema: 2.0.0
 ---
 
-# Remove-VIGlobalPermission
+# Export-VIRolePrivs
 
 ## SYNOPSIS
-Delete a global permission for a specific user/group.
+{{ Fill in the Synopsis }}
 
 ## SYNTAX
 
 ```
-Remove-VIGlobalPermission [-Name] <String> [-IsGroup] [-SkipCertificateCheck] [<CommonParameters>]
+Export-VIRolePrivs [[-Server] <String>] [-Name] <String[]> [-Path] <FileInfo> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-Delete a global permission for a specific user/group.
+{{ Fill in the Description }}
 
 ## EXAMPLES
 
-### EXAMPLE 1
-```
-Remove-VIGlobalPermission -Name "VSPHERE.LOCAL\Administrator"
+### Example 1
+```powershell
+PS C:\> {{ Add example code here }}
 ```
 
-### EXAMPLE 2
-```
-Remove-VIGlobalPermission -Name "VSPHERE.LOCAL\group-of-users" -IsGroup
-```
+{{ Add example description here }}
 
 ## PARAMETERS
 
 ### -Name
-Specify the name of user or group including the domain.
+{{ Fill Name Description }}
 
 ```yaml
-Type: String
+Type: String[]
 Parameter Sets: (All)
 Aliases:
 
 Required: True
 Position: 1
 Default value: None
-Accept pipeline input: False
+Accept pipeline input: True (ByPropertyName)
 Accept wildcard characters: False
 ```
 
-### -IsGroup
-Specify whether the target is a group object or not.
+### -Path
+{{ Fill Path Description }}
 
 ```yaml
-Type: SwitchParameter
+Type: FileInfo
 Parameter Sets: (All)
 Aliases:
 
-Required: False
+Required: True
 Position: 2
-Default value: False
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
-### -SkipCertificateCheck
-Skip certificate verification.
+### -Server
+{{ Fill Server Description }}
 
 ```yaml
-Type: SwitchParameter
+Type: String
 Parameter Sets: (All)
 Aliases:
 
 Required: False
-Position: 3
-Default value: False
+Position: 0
+Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
@@ -83,8 +80,11 @@ This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable
 
 ## INPUTS
 
+### System.String[]
+
 ## OUTPUTS
 
+### System.Object
 ## NOTES
 
 ## RELATED LINKS

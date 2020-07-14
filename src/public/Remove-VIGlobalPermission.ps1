@@ -2,37 +2,46 @@ function Remove-VIGlobalPermission {
     [CmdLetBinding()]
     param (
         [Parameter(
-            Position = 0,
+            Mandatory = $false
+        )]
+        [string[]] $Server,
+
+        [Parameter(
             Mandatory = $true
         )]
         [String] $Principal,
 
         [Parameter(
-            Position = 1,
             Mandatory = $false
         )]
         [Switch] $IsGroup
     )
 
     try {
+        if (-not $Server) {
+            $Server = Get-DefaultVIPermsServer
+        }
         $Group = switch ($IsGroup) {
             $true {"true"}
             $false {"false"}
         }
-        $Body = @{
-            "principals" = @"
+        foreach ($Srv in $Server) {
+            $Body = @{
+                "principals" = @"
 <principals>
   <name>$Principal</name>
   <group>$Group</group>
 </principals>
 "@
+            }
+            $Params = @{
+                Server = $Srv
+                Uri = "AuthorizationService.RemoveGlobalAccess"
+                Method = "POST"
+                Body = $Body
+            }
+            Invoke-MobRequest @Params
         }
-        $Params = @{
-            Uri = "AuthorizationService.RemoveGlobalAccess"
-            Method = "POST"
-            Body = $Body
-        }
-        Invoke-MobRequest @Params
     } catch {
         $Err = $_
         throw $Err

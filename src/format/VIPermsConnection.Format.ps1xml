@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Configuration>
+  <ViewDefinitions>
+    <View>
+      <Name>VIPermsConnection</Name>
+      <ViewSelectedBy>
+        <TypeName>VIPermsConnection</TypeName>
+      </ViewSelectedBy>
+      <TableControl>
+        <TableHeaders>
+          <TableColumnHeader>
+            <Label>Server</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>Port</Label>
+          </TableColumnHeader>
+          <TableColumnHeader>
+            <Label>User</Label>
+          </TableColumnHeader>
+        </TableHeaders>
+        <TableRowEntries>
+          <TableRowEntry>
+            <TableColumnItems>
+              <TableColumnItem>
+                <PropertyName>Server</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <PropertyName>Port</PropertyName>
+              </TableColumnItem>
+              <TableColumnItem>
+                <ScriptBlock>$_.Credential.UserName</ScriptBlock>
+              </TableColumnItem>
+            </TableColumnItems>
+          </TableRowEntry>
+        </TableRowEntries>
+      </TableControl>
+    </View>
+  </ViewDefinitions>
+</Configuration>
