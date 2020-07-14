@@ -1,3 +1,4 @@
+$ErrorActionPreference = "Stop"
 param (
     [switch] $Test,
     [switch] $CodeCov,
@@ -17,7 +18,7 @@ if (-not (Test-Path -Path $OutPath)) {
 Copy-Item -Path $SrcPath -Destination $ModulePath -Recurse
 
 if ($ExtDocs) {
-    $DocsPath = Join-Path -Path (Split-Path -Path $PSScriptRoot -Parent) -ChildPath "docs"
+    $DocsPath = Join-Path -Path (Join-Path -Path (Split-Path -Path $PSScriptRoot -Parent) -ChildPath "docs") -ChildPath "platyPS"
     New-ExternalHelp -Path $DocsPath -OutputPath (Join-Path -Path $ModulePath -ChildPath "en-US")
 }
 
