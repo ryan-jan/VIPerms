@@ -11,7 +11,7 @@ install:
   - ps: Install-Module -Name Pester -MaximumVersion 4.10.0 -Scope CurrentUser -Force -Confirm:$false
   - ps: Install-Module -Name platyPS -Scope CurrentUser -Force -Confirm:$false
   - ps: Install-Module -Name PSCodeCovIO -Scope CurrentUser -Force -Confirm:$false
-  - ps: Install-Module -Name VMware.PowerCLI -Scope CurrentUser -Force -Confirm:$false
+  - ps: Install-Module -Name VMware.PowerCLI -Scope CurrentUser -Force -Confirm:$false -AllowClobber
 for:
   -
     matrix:
