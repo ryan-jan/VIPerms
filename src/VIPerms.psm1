@@ -17,7 +17,7 @@ Register-VIPermsArgCompleter
 # Add HtmlAgilityPack type depending on PSVersion
 try {
     if (-not ([System.Management.Automation.PSTypeName]'HtmlAgilityPack.HtmlDocument').Type) {
-        $Types = Join-Path -Path $PSScriptRoot -ChildPath "Types"
+        $Types = Join-Path -Path $PSScriptRoot -ChildPath "types"
         if ($PSVersionTable.PSEdition -eq "Desktop") {
             $Net45 = Join-Path -Path $Types -ChildPath "Net45"
             Add-Type -Path (Join-Path -Path $Net45 -ChildPath "HtmlAgilityPack.dll")
